@@ -2,7 +2,10 @@
     <header
         class="flex justify-between items-center p-2 bg-white h-16 min-h-16 shadow-lg"
     >
-        <button class="items-center hover:bg-gray-300 p-2">
+        <button
+            @click="$emit('toggle-sidebar')"
+            class="items-center hover:bg-gray-300 p-2"
+        >
             <Bars3Icon class="w-8" />
         </button>
 
@@ -14,7 +17,7 @@
                         alt=""
                         class="rounded-full h-12"
                     />
-                    <small class="ml-2">Sylvia</small>
+                    <small class="ml-2">{{ currentUser.name }}</small>
                     <ChevronDownIcon
                         class="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-indigo-800"
                         aria-hidden="true"
@@ -53,6 +56,7 @@
                         </MenuItem>
                         <MenuItem v-slot="{ active }">
                             <button
+                                @click="logout"
                                 :class="[
                                     active
                                         ? 'bg-indigo-800 text-white'
@@ -83,4 +87,15 @@ import {
     ArrowLeftIcon,
     UserIcon,
 } from "@heroicons/vue/20/solid";
+import store from "../store";
+import router from "../router";
+import { computed } from "vue";
+const emit = defineEmits(["toggle-sidebar"]);
+const currentUser = computed(() => store.state.user.data);
+
+function logout() {
+    store.dispatch("logout").then(() => {
+        router.push({ name: "login" });
+    });
+}
 </script>
